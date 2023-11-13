@@ -1,3 +1,4 @@
+//Muhammad_Affan_Wajid_22i-2567
 #pragma once
 #include<iostream>
 #include<string>
@@ -51,7 +52,7 @@ public:
 				right = set_path(name, root->right);
 			}
 
-			if (!(root->left && root->right))
+			if (!(root->left || root->right))//If both of them non existent
 			{
 				return "|";
 			}
@@ -74,9 +75,77 @@ public:
 	}
 };
 
+class Node_Q
+{
+public:
+	Node* data;
+	Node_Q* next;
+	Node_Q(Node* data)
+	{
+		this->data = data;
+		next == NULL;
+	}
 
+};
 class Queue
 {
+private:
+	Node_Q* front;
+	Node_Q* rear;
+
+public:
+	Queue()
+	{
+		front = NULL;
+		rear = NULL;
+	}
+	bool isEmpty()
+	{
+		if (front == NULL && rear == NULL)
+		{
+			return true;
+		}
+		return false;
+	}
+	void enqueue(Node* add)
+	{
+		if (isEmpty())//Check if this is the first data being added
+		{
+			front = new Node_Q(add);
+			
+			rear = new Node_Q(add);
+
+		}
+		else if (!(front->next)) //the next node is NULL
+		{
+
+			rear->next = new Node_Q(add);
+			rear = rear->next;
+			front->next = rear;
+		}
+		else
+		{
+			rear->next = new Node_Q(add);
+			rear = rear->next;
+		}
+	}
+	Node* front()
+	{
+		return front->data;
+	}
+	void dequeue()
+	{
+		if (isEmpty())
+		{
+			cout << "Queue is empty(Dequeue op)! ";
+
+		}
+		else
+		{
+			front = front->next;
+
+		}
+	}
 
 };
 
@@ -93,5 +162,39 @@ public:
 		root->right = new Node("Logs", false,root);
 	}
 	
-	void 
+	void levelorder_print()
+	{
+		Queue q;
+		q.enqueue(root);
+		q.enqueue(NULL);
+		while (!q.isEmpty())
+		{
+			Node* temp = q.front();
+			q.dequeue();
+			if (temp == NULL)
+			{
+				cout << endl;
+				if (!(q.isEmpty()))
+				{
+					q.enqueue(NULL);
+				}
+			}
+			else
+			{
+				cout << temp->name << " ";
+				if (temp->left)
+				{
+					q.enqueue(temp->left);
+				}
+				if (temp->right)
+				{
+					q.enqueue(temp->right);
+				}
+			}
+		}
+	}
+	void add_file()
+	{
+
+	}
 };
