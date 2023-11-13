@@ -30,6 +30,25 @@ public:
 		left = NULL;
 		right = NULL;
 	}
+	Node(string name)
+	{
+		this->name = name;
+		path = "";
+		type = false;
+		left = NULL;
+		right = NULL;
+	}
+	bool contains_sym(string str)
+	{
+		for (int i = 0; i < str.length(); i++)
+		{
+			if (str[i] == '|')
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	string set_path(string name,Node* root)
 	{
 		string left = "";
@@ -64,19 +83,24 @@ public:
 
 		}
 
-		if (!(left.find('|')))
+		if (!(contains_sym(left)))
 		{
-			return left;
+			return root->name+left;
 			
 		}
-		else if(!(right.find('|')))
+		else if(!(contains_sym(left)))
 		{
-			return right;
+			return root->name+right ;
 		}
 		
 		return "No Path";
 		
 	}
+	void set_path_auto(Node* root)
+	{
+		this->path = set_path(name, root);
+	}
+	
 };
 
 class Node_Q
@@ -194,8 +218,10 @@ public:
 	FileTree()
 	{
 		root = new Node("\\",false,root);
-		root->left = new Node("Patients", false,root);
-		root->right = new Node("Logs", false,root);
+		root->left = new Node("Patients");
+		root->left->set_path_auto(root);
+		root->right = new Node("Logs");
+		root->right->set_path_auto(root);
 	}
 	
 	void levelorder_print()
@@ -229,7 +255,15 @@ public:
 			}
 		}
 	}
+	void print_path()
+	{
+		cout << root->left->path;
+	}
 	void add_file()
+	{
+
+	}
+	void add_dir()
 	{
 
 	}

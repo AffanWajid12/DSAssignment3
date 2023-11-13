@@ -7,4 +7,6 @@ int main()
 {
 	FileTree tree;
 	tree.levelorder_print();
+	cout << endl;
+	tree.print_path();
 }
