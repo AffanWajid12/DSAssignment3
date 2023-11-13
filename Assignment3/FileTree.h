@@ -34,6 +34,10 @@ public:
 	{
 		string left = "";
 		string right = "";
+		if (root == NULL)
+		{
+			return name;
+		}
 		if (name == root->name)
 		{
 			return name;
@@ -83,7 +87,7 @@ public:
 	Node_Q(Node* data)
 	{
 		this->data = data;
-		next == NULL;
+		next = NULL;
 	}
 
 };
@@ -101,7 +105,7 @@ public:
 	}
 	bool isEmpty()
 	{
-		if (front == NULL && rear == NULL)
+		if (front == NULL || rear == NULL)
 		{
 			return true;
 		}
@@ -111,40 +115,72 @@ public:
 	{
 		if (isEmpty())//Check if this is the first data being added
 		{
-			front = new Node_Q(add);
-			
-			rear = new Node_Q(add);
+			Node_Q* temp = new Node_Q(add);
+			front = temp;
+
+			rear = temp;
 
 		}
-		else if (!(front->next)) //the next node is NULL
+		else  
 		{
 
+			Node_Q* temp = new Node_Q(add);
 			rear->next = new Node_Q(add);
 			rear = rear->next;
-			front->next = rear;
+			
+
+		}
+		/*else if (front != NULL) //the next node is NULL
+		{
+			if (!(front->next))
+			{
+				rear->next = new Node_Q(add);
+				rear = rear->next;
+				front->next = rear;
+			}
 		}
 		else
 		{
+			
 			rear->next = new Node_Q(add);
 			rear = rear->next;
-		}
+
+		}*/
 	}
-	Node* front()
+	Node* get_front()
 	{
-		return front->data;
+		if(!(isEmpty()) && front !=NULL)
+			return front->data;
+
+		return NULL;
 	}
 	void dequeue()
 	{
-		if (isEmpty())
+		if (isEmpty() )
 		{
 			cout << "Queue is empty(Dequeue op)! ";
 
 		}
+		/*
+		else if( front != NULL)
+		{
+			if (front->next|| rear)
+			{
+				front = front->next;
+			}
+			else
+			{
+				front = NULL;
+			}
+
+		}*/
 		else
 		{
-			front = front->next;
-
+			
+				front = front->next;
+			
 		}
+		
 	}
 
 };
@@ -167,9 +203,9 @@ public:
 		Queue q;
 		q.enqueue(root);
 		q.enqueue(NULL);
-		while (!q.isEmpty())
+		while (!(q.isEmpty()))
 		{
-			Node* temp = q.front();
+			Node* temp = q.get_front();
 			q.dequeue();
 			if (temp == NULL)
 			{
