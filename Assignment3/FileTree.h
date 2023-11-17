@@ -22,10 +22,10 @@ public:
 		right = NULL;
 
 	}
-	Node(string name,bool type,Node* root)
+	Node(string name, bool type, Node* root)
 	{
 		this->name = name;
-		path = set_path(name,root);
+		path = set_path(name, root);
 		this->type = type;
 		left = NULL;
 		right = NULL;
@@ -35,6 +35,14 @@ public:
 		this->name = name;
 		path = "";
 		type = false;
+		left = NULL;
+		right = NULL;
+	}
+	Node(string name, bool type)
+	{
+		this->name = name;
+		path = "";
+		this->type = type;
 		left = NULL;
 		right = NULL;
 	}
@@ -49,8 +57,9 @@ public:
 		}
 		return false;
 	}
-	string set_path(string name,Node* root)
+	string set_path(string name, Node* root)
 	{
+
 		string left = "";
 		string right = "";
 		if (root == NULL)
@@ -62,12 +71,12 @@ public:
 			return name;
 
 		}
-		else if(name != root->name)
+		else if (name != root->name)
 		{
-			
-			if (root->left && !(root->left->type) )//Check if it is not NULL and is also a directory
+
+			if (root->left && !(root->left->type))//Check if it is not NULL and is also a directory
 			{
-				 left = set_path(name, root->left);
+				left = set_path(name, root->left);
 			}
 
 			if (root->right && !(root->right->type))//Check if it is not NULL and is also a directory
@@ -83,24 +92,49 @@ public:
 
 		}
 
+
 		if (!(contains_sym(left)))
 		{
-			return root->name+left;
-			
+			if (root->name != "\\" && type == false)
+			{
+
+				return root->name + "\\" + left;
+			}
+			else if (root->name != "\\" && type == true)
+			{
+				return root->name + "\\" + left + name;
+			}
+			else
+			{
+				return root->name + left;
+			}
 		}
-		else if(!(contains_sym(left)))
+		else if (!(contains_sym(right)))
 		{
-			return root->name+right ;
+			if (root->name != "\\")
+			{
+
+				return root->name + "\\" + right;
+			}
+			else if (root->name != "\\" && type == true)
+			{
+				return root->name + "\\" + left + name;
+			}
+			else
+			{
+				return root->name + right;
+			}
 		}
-		
+
 		return "No Path";
-		
+
 	}
 	void set_path_auto(Node* root)
 	{
+
 		this->path = set_path(name, root);
 	}
-	
+
 };
 
 class Node_Q
@@ -145,13 +179,13 @@ public:
 			rear = temp;
 
 		}
-		else  
+		else
 		{
 
 			Node_Q* temp = new Node_Q(add);
 			rear->next = new Node_Q(add);
 			rear = rear->next;
-			
+
 
 		}
 		/*else if (front != NULL) //the next node is NULL
@@ -165,7 +199,7 @@ public:
 		}
 		else
 		{
-			
+
 			rear->next = new Node_Q(add);
 			rear = rear->next;
 
@@ -173,14 +207,14 @@ public:
 	}
 	Node* get_front()
 	{
-		if(!(isEmpty()) && front !=NULL)
+		if (!(isEmpty()) && front != NULL)
 			return front->data;
 
 		return NULL;
 	}
 	void dequeue()
 	{
-		if (isEmpty() )
+		if (isEmpty())
 		{
 			cout << "Queue is empty(Dequeue op)! ";
 
@@ -200,11 +234,11 @@ public:
 		}*/
 		else
 		{
-			
-				front = front->next;
-			
+
+			front = front->next;
+
 		}
-		
+
 	}
 
 };
@@ -217,13 +251,15 @@ private:
 public:
 	FileTree()
 	{
-		root = new Node("\\",false,root);
+		root = new Node("\\", false, root);
+
 		root->left = new Node("Patients");
 		root->left->set_path_auto(root);
+
 		root->right = new Node("Logs");
 		root->right->set_path_auto(root);
 	}
-	
+
 	void levelorder_print()
 	{
 		Queue q;
@@ -259,12 +295,320 @@ public:
 	{
 		cout << root->left->path;
 	}
+
 	void add_file()
 	{
+		int a = 1;
+		while (1)
+		{
+			cout << "Do you want to insert the new file in Patients Directory or Logs Directory?" << endl;
+			cout << "1.Patients" << endl;
+			cout << "2.Logs" << endl << endl;;
+
+			int select;
+			cin >> select;
+			Node* temp = NULL;
+			switch (select)
+			{
+			case 1:
+			{
+				temp = root->left;//Select patients
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->right == NULL)
+					{
+						cout << "This dir has space for new file! Do you want to add the new directory here? " << endl;
+						cout << "1.Yes		2.Goto Sub-Directory of Current Directory			3.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							cout << "Give a name to new file with extension: ";
+							string n;
+							cin >> n;
+							temp->right = new Node(n, true);
+							temp->right->set_path_auto(root);
+							return;
+						}
+						else if (select2 == 2)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a file already. Do you want to go into the sub-dir or cancel this action? " << endl;
+						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+				return;
+			}
+
+			case 2:
+			{
+				temp = root->right;//Select Logs
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->right == NULL)
+					{
+						cout << "This dir has space for new file! Do you want to add the new directory here? " << endl;
+						cout << "1.Yes		2.Goto Sub-Directory of Current Directory			3.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							cout << "Give a name to new file with extension: ";
+							string n;
+							cin >> n;
+							temp->right = new Node(n);
+							temp->right->set_path_auto(root);
+							return;
+						}
+						else if (select2 == 2)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a file already. Do you want to go into the sub-dir or cancel this action? " << endl;
+						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+				return;
+			}
+			default:
+				cout << "Wrong option! ";
+
+				continue;
+			}
+		}
+
 
 	}
 	void add_dir()
 	{
+		/*User first selects where they want to put the directory.After that the user traverses throught the tree manually and once he
+		reaches the desired location they can add a new directory there if there is space for it.If not user is told they cannot add
+		The new directory in that location and function is terminated.*/
+		int a = 1;
+		while (1)
+		{
+			cout << "Do you want to insert the new directory in Patients Directory or Logs Directory?" << endl;
+			cout << "1.Patients" << endl;
+			cout << "2.Logs" << endl << endl;;
 
+			int select;
+			cin >> select;
+			Node* temp = NULL;
+			switch (select)
+			{
+			case 1:
+			{
+				temp = root->left;
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->left == NULL)
+					{
+						cout << "This dir has space for new dir! Do you want to add the new directory here? " << endl;
+						cout << "1.Yes			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							cout << "Give a name to new directory: ";
+							string n;
+							cin >> n;
+							temp->left = new Node(n);
+							temp->left->set_path_auto(root);
+							return;
+						}
+						else
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a sub-dir already. Do you want to go into the sub-dir or cancel this action? " << endl;
+						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							temp = temp->left;
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+
+
+
+
+				return;
+			}
+
+			case 2:
+			{
+				temp = root->right;//Goto Logs Folder
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->left == NULL)
+					{
+						cout << "This dir has space for new dir! Do you want to add the new directory here? " << endl;
+						cout << "1.Yes			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							cout << "Give a name to new directory: ";
+							string n;
+							cin >> n;
+							temp->left = new Node(n);
+							temp->left->set_path_auto(root);
+							return;
+						}
+						else
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a sub-dir already. Do you want to go into the sub-dir or cancel this action? " << endl;
+						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							temp = temp->left;
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+
+
+				return;
+			}
+			default:
+				cout << "Wrong option! ";
+
+				continue;
+			}
+		}
+
+	}
+
+	void search(string name)
+	{
+		Queue q;
+		q.enqueue(root);
+		q.enqueue(NULL);
+		while (!(q.isEmpty()))
+		{
+			Node* temp = q.get_front();
+			q.dequeue();
+
+			if (temp == NULL)
+			{
+				cout << endl;
+				if (!(q.isEmpty()))
+				{
+					q.enqueue(NULL);
+				}
+			}
+			else
+			{
+				if (temp->name == name)
+				{
+					cout << "Found and path is: " << temp->path;
+					return;
+				}
+				if (temp->left)
+				{
+					q.enqueue(temp->left);
+				}
+				if (temp->right)
+				{
+					q.enqueue(temp->right);
+				}
+			}
+		}
+		cout << "The file or folder by name does not exist! ";
+		return;
 	}
 };
