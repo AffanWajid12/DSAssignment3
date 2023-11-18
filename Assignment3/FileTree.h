@@ -25,7 +25,8 @@ public:
 	Node(string name, bool type, Node* root)
 	{
 		this->name = name;
-		path = set_path(name, root);
+		//set_path_auto(root);
+		path = set_path(name, root,"");
 		this->type = type;
 		left = NULL;
 		right = NULL;
@@ -57,6 +58,50 @@ public:
 		}
 		return false;
 	}
+
+	string set_path(string name, Node* root,string path)
+	{
+		string left = "";
+		string right = "";
+		if (root == NULL)
+		{
+			return "";
+		}
+		if (name == root->name)
+		{
+			return name;
+
+		}
+
+		left = set_path(name, root->left,"");
+		right = set_path(name, root->right,"");
+
+		if (left != "")
+		{
+			if (root->name != "\\")
+			{
+			left = root->name + "\\" + left;
+			}
+			else
+			{
+				left = root->name  + left;
+			}
+		}
+		else if(right!="")
+		{
+			if (root->name != "\\")
+			{
+				right = root->name + "\\" + right;
+			}
+			else
+			{
+				right = root->name + right;
+			}
+		}
+		return left + right;
+	}
+
+	/*
 	string set_path(string name, Node* root)
 	{
 
@@ -64,27 +109,75 @@ public:
 		string right = "";
 		if (root == NULL)
 		{
-			return name;
+			return "|";
 		}
 		if (name == root->name)
 		{
 			return name;
 
 		}
-		else if (name != root->name)
+		
+		if (name != root->name)
 		{
-
-			if (root->left && !(root->left->type))//Check if it is not NULL and is also a directory
+			if (root->left || root->right)
 			{
-				left = set_path(name, root->left);
-			}
+				if (root->left)//Check if it is not NULL and is also a directory
+				{
+					left = set_path(name, root->left);
+				}
 
-			if (root->right && !(root->right->type))//Check if it is not NULL and is also a directory
-			{
-				right = set_path(name, root->right);
-			}
+				if (root->right)//Check if it is not NULL and is also a directory
+				{
+					right = set_path(name, root->right);
+				}
 
-			if (!(root->left || root->right))//If both of them non existent
+				if (!(contains_sym(left)))
+				{
+				//
+					if (root->name != "\\" && type == false)
+					{
+
+						return root->name + "\\" + left;
+					}
+					else if (root->name != "\\" && type == true)
+					{
+						return root->name + "\\" + left + name;
+					}
+					else
+					{
+						return root->name + left;
+					}//
+					if (root->name != "\\")
+					{
+
+						return root->name + "\\" + left;
+					}
+					return "\\" + left;
+				}
+				else if (!(contains_sym(right)))
+				{//
+					if (root->name != "\\")
+					{
+
+						return root->name + "\\" + right;
+					}
+					else if (root->name != "\\" && type == true)
+					{
+						return root->name + "\\" + left + name;
+					}
+					else
+					{
+						return root->name + right;
+					}//
+					if (root->name != "\\")
+					{
+
+						return root->name + "\\" + right;
+					}
+					return "\\" + right;
+				}
+			}
+			else if(root->left == NULL && root->right == NULL)
 			{
 				return "|";
 			}
@@ -93,46 +186,25 @@ public:
 		}
 
 
-		if (!(contains_sym(left)))
-		{
-			if (root->name != "\\" && type == false)
-			{
-
-				return root->name + "\\" + left;
-			}
-			else if (root->name != "\\" && type == true)
-			{
-				return root->name + "\\" + left + name;
-			}
-			else
-			{
-				return root->name + left;
-			}
-		}
-		else if (!(contains_sym(right)))
-		{
-			if (root->name != "\\")
-			{
-
-				return root->name + "\\" + right;
-			}
-			else if (root->name != "\\" && type == true)
-			{
-				return root->name + "\\" + left + name;
-			}
-			else
-			{
-				return root->name + right;
-			}
-		}
+		
 
 		return "No Path";
 
-	}
+	}*/
 	void set_path_auto(Node* root)
 	{
-
-		this->path = set_path(name, root);
+		/*
+		string path = "";
+		bool check = set_path(name, root, path);
+		if (check)
+		{
+			this->path = path;
+		}
+		else
+		{
+			this->path = "Path does not exist";
+		}*/
+		this->path = set_path(name, root,"");
 	}
 
 };
@@ -294,7 +366,7 @@ public:
 	void print_path()
 	{
 		cout << root->left->path;
-	}
+	}//Debugging purposes
 
 	void add_file()
 	{
@@ -336,6 +408,7 @@ public:
 							if (temp->left != NULL)
 							{
 								temp = temp->left;
+								continue;
 							}
 							else
 							{
@@ -360,6 +433,7 @@ public:
 							if (temp->left != NULL)
 							{
 								temp = temp->left;
+								continue;
 							}
 							else
 							{
@@ -403,6 +477,7 @@ public:
 							if (temp->left != NULL)
 							{
 								temp = temp->left;
+								continue;
 							}
 							else
 							{
@@ -427,6 +502,7 @@ public:
 							if (temp->left != NULL)
 							{
 								temp = temp->left;
+								continue;
 							}
 							else
 							{
@@ -504,6 +580,7 @@ public:
 						if (select2 == 1)
 						{
 							temp = temp->left;
+							continue;
 						}
 						else
 						{
@@ -553,6 +630,7 @@ public:
 						if (select2 == 1)
 						{
 							temp = temp->left;
+							continue;
 						}
 						else
 						{
@@ -572,7 +650,167 @@ public:
 		}
 
 	}
+	void del_file()
+	{
+		int a = 1;
+		while (1)
+		{
+			cout << "Do you want to delete a file in Patients Directory or Logs Directory?" << endl;
+			cout << "1.Patients" << endl;
+			cout << "2.Logs" << endl << endl;;
 
+			int select;
+			cin >> select;
+			Node* temp = NULL;
+			switch (select)
+			{
+			case 1:
+			{
+				temp = root->left;//Select patients
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->right == NULL)
+					{
+						cout << "This Dir has no file to delete. Do you want to goto a sub-dir or cancel and return to menu? " << endl;
+						cout <<"1.Goto Sub - Directory of Current Directory			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)//Goto sub-dir
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+								continue;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else//Cancel and return to menu
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a file named "<<temp->right->name<<" Do you want to go into the sub - dir ,delete this file or cacncel this action ? " << endl;
+						cout << "1.Goto sub-dir			2.Delete file		3.Cancel deletion" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)//Goto sub dir
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+								continue;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else if (select2 == 2)//Delete File
+						{
+							delete temp->right;
+							temp->right = NULL;
+							char c = _getch();
+							return;
+						}
+						else//Cancel operation
+						{
+							return;
+						}
+					}
+				}
+				return;
+			}
+
+			case 2:
+			{
+
+				temp = root->right;//Select Logs
+				while (1)
+				{
+					cout << "Path: " << temp->path << endl;
+					if (temp->right == NULL)
+					{
+						cout << "This Dir has no file to delete. Do you want to goto a sub-dir or cancel and return to menu? " << endl;
+						cout << "1.Goto Sub - Directory of Current Directory			2.Cancel and return to menu" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+								continue;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else
+						{
+							return;
+						}
+					}
+					else
+					{
+						cout << "This dir has a file named " << temp->right->name << " Do you want to go into the sub - dir ,delete this file or cacncel this action ? " << endl;
+						cout << "1.Goto sub-dir			2.Delete file		3.Cancel deletion" << endl;
+						int select2;
+						cin >> select2;
+						if (select2 == 1)
+						{
+							if (temp->left != NULL)
+							{
+								temp = temp->left;
+								continue;
+							}
+							else
+							{
+								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+								char c = _getch();
+								return;
+							}
+						}
+						else if (select2 == 2)
+						{
+							delete temp->right;
+							temp->right = NULL;
+							char c = _getch();
+							return;
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+				return;
+			
+			}
+			default:
+				cout << "Wrong option! ";
+
+				continue;
+			}
+		}
+
+	}
+	void del_dir()
+	{
+
+	}
 	void search(string name)
 	{
 		Queue q;

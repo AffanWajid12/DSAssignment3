@@ -17,21 +17,21 @@ int main()
 		cout << "1.List the file directory tree" << endl;
 		cout << "2.Add new file" << endl;
 		cout << "3.Add new directory" << endl;
-		cout << "5.Delete File" << endl;
-		cout << "6.Delete Directory" << endl;
-		cout << "7.Rename File" << endl;
-		cout << "8.Rename Directory" << endl;
-		cout << "9.Search by name" << endl;
-		cout << "10.Copy File" << endl;
-		cout << "11.Copy Folder" << endl;
-		cout << "10.Merge Directory" << endl;
+		cout << "4.Delete File" << endl;
+		cout << "5.Delete Directory" << endl;
+		cout << "6.Rename File" << endl;
+		cout << "7.Rename Directory" << endl;
+		cout << "8.Search by name" << endl;
+		cout << "9.Copy File" << endl;
+		cout << "10.Copy Folder" << endl;
+		cout << "11.Merge Directory" << endl;
 		int select;
 		cin >> select;
 
 		switch (select)
 		{
 
-		case 1:
+		case 1://Print level order of the file tree
 		{
 			system("cls");
 			tree.levelorder_print();
@@ -41,7 +41,7 @@ int main()
 			continue;
 		}
 
-		case 2:
+		case 2://Add a file to path by specifying name
 		{
 			system("cls");
 			tree.add_file();
@@ -49,20 +49,24 @@ int main()
 			continue;
 		}
 
-		case 3:
+		case 3://Add a directory to path by specifying name
 		{
 			system("cls");
 			tree.add_dir();
 			continue;
 		}
 
-		case 4:
+		case 4://Del a specific file by giving the path of that file
 		{
+			system("cls");
+			tree.del_file();
 			continue;
 		}
 
-		case 5:
+		case 5://Del a specific directory by giving the path of that directory
 		{
+			system("cls");
+			tree.del_dir();
 			continue;
 		}
 
@@ -71,7 +75,7 @@ int main()
 			continue;
 		}
 
-		case 9:
+		case 8:
 		{
 			system("cls");
 			cout << "Enter the name of the file or folder you want to search: ";
