@@ -22,9 +22,11 @@ int main()
 		cout << "5.Delete Directory                                                                                       |" << endl<<endl;
 		cout << "6.Rename File or Directory                                                                               |" << endl<<endl;
 		cout << "7.Search by name                                                                                         |" << endl<<endl;
-		cout << "8.Copy File                                                                                              |" << endl<<endl;
-		cout << "9.Move File                                                                                              |" << endl<<endl;
-		cout << "10.Merge Directory                                                                                        " << endl;
+		cout << "8.Copy File			                                                                                  |" << endl<<endl;
+		cout << "9.Copy\Move Directory                                                                                    |" << endl<<endl;
+		cout << "10.Move File                                                                                             |" << endl<<endl;
+		cout << "11.Merge Directory                                                                                       |" << endl<<endl;
+		cout << "12.Save/Load file																						  " << endl;
 		cout << "---------------------------------------------------------------------------------------------------------|" << endl<<endl;
 		cout << "Input: ";
 		int select;
@@ -100,6 +102,13 @@ int main()
 			continue;
 		}
 		case 9:
+		{
+			system("cls");
+			tree.copy_dir();
+			continue;
+		}
+
+		case 10:
 		{
 			system("cls");
 			tree.move_file();
