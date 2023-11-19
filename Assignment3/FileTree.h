@@ -1472,7 +1472,7 @@ public:
 	
 	void move_dir()
 	{
-		cout << "Copy|" << endl;
+		cout << "Cut|" << endl;
 		Node* to_copy = get_for_copy_dir();
 		if (to_copy == NULL)
 		{
@@ -1480,10 +1480,10 @@ public:
 		}
 		
 		system("cls");
-		cout << "Paste| " << to_copy->name<<endl;
+		cout << "Move| " << to_copy->name<<endl;
 		//This is copied from the add dir func:
 
-			cout << "Do you want to insert the new directory in Patients Directory or Logs Directory?" << endl;
+			cout << "Do you want to insert the directory in Patients Directory or Logs Directory?" << endl;
 			cout << "1.Patients" << endl;
 			cout << "2.Logs" << endl << endl;;
 
