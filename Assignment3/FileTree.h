@@ -2,6 +2,8 @@
 #pragma once
 #include<iostream>
 #include<string>
+#include<fstream>
+#include<sstream>
 using namespace std;
 
 
@@ -1450,6 +1452,7 @@ public:
 		return temp;
 	}
 	
+	
 	void copy_dir()
 	{
 		cout << "Copy|" << endl;
@@ -1498,7 +1501,8 @@ public:
 					{
 						
 						temp->left = clone_dir(to_copy);
-						temp->left->set_path_auto(root);
+						recal_all_path(temp->left);
+						//temp->left->set_path_auto(root);
 						return;
 					}
 					else
@@ -1744,6 +1748,63 @@ public:
 			
 			return;
 		}
+
+
+	//For importing the filetree and exporting the filetree
+	void store_in_csv(fstream& f, Node* root)//For storing the tree in a preorder way
+	{
+		if (root == NULL)
+		{
+			f << "~"<<" ";
+			return;
+		}
+		f << root->name<<" ";
+		store_in_csv(f, root->left);
+		store_in_csv(f, root->right);
+		return;
+	}
+	void export_tree()
+	{
+		fstream filetree;
+		filetree.open("filetree.csv", ios::out);
+		store_in_csv(filetree, root);
+	}
+
+	void store_in_filetree(fstream& f, Node*& root,bool type)
+	{
+		string name;
+		
+		if (!(f>>name) || name == "~")
+		{
+			return;
+		}
+		root = new Node(name,type);
+		store_in_filetree(f, root->left, true);
+		store_in_filetree(f, root->right, false);
+		return;
+	}
+	void import_tree()
+	{
+		fstream filetree;
+		filetree.open("filetree.csv", ios::in);
+		root = NULL;
+		
+		store_in_filetree(filetree, root,true);
+		recal_all_path(root);
+	}
+	
+	void recal_all_path(Node*& root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+		root->set_path_auto(this->root);
+		recal_all_path(root->left);
+		recal_all_path(root->right);
+		return;
+	}
+
 	};
 
 	

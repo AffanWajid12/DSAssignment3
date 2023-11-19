@@ -26,7 +26,8 @@ int main()
 		cout << "9.Copy\\Move Directory                                                                                    |" << endl<<endl;
 		cout << "10.Move File                                                                                             |" << endl<<endl;
 		cout << "11.Merge Directory                                                                                       |" << endl<<endl;
-		cout << "12.Save/Load file																						  " << endl;
+		cout << "12.Export File Tree                                                                                      |" << endl<<endl;
+		cout << "13.Import File Tree                                                                                              " << endl;
 		cout << "---------------------------------------------------------------------------------------------------------|" << endl<<endl;
 		cout << "Input: ";
 		int select;
@@ -95,30 +96,50 @@ int main()
 			continue;
 		}
 
-		case 8://Used to copy a file from one folder to another
+		case 8://Used to copy a file from one folder to another directory and also rename to not cause errors
 		{
 			system("cls");
 			tree.copy_file();
 			continue;
 		}
-		case 9:
+		case 9:// It is used to copy/move directory from one location to another
 		{
 			system("cls");
 			tree.copy_dir();
 			continue;
 		}
 
-		case 10:
+		case 10://It is used to move a file from one directory to another directory
 		{
 			system("cls");
 			tree.move_file();
 			continue;
 		}
 
-		case 11:
+		case 11://Used to merge the contents of one directory to another directory
 		{
 			system("cls");
 			tree.merge_dirs();
+			continue;
+		}
+
+		case 12://Used to export the filetree to filetree.csv
+		{
+			system("cls");
+			tree.export_tree();
+			cout << endl << endl << "Saved the file tree in filetree.txt. Press any button to continue...";
+
+			temp = _getch();
+			continue;
+		}
+
+		case 13://Used to import the filetree from filetree.csv
+		{
+			system("cls");
+			tree.import_tree();
+			cout << endl << endl << "Loaded the file tree frpm filetree.txt. Press any button to continue...";
+
+			temp = _getch();
 			continue;
 		}
 
