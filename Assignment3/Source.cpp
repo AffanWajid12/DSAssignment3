@@ -23,11 +23,12 @@ int main()
 		cout << "6.Rename File or Directory                                                                               |" << endl<<endl;
 		cout << "7.Search by name                                                                                         |" << endl<<endl;
 		cout << "8.Copy File                                                                                              |" << endl<<endl;
-		cout << "9.Copy\\Move Directory                                                                                    |" << endl<<endl;
+		cout << "9.Move Directory                                                                                         |" << endl<<endl;
 		cout << "10.Move File                                                                                             |" << endl<<endl;
 		cout << "11.Merge Directory                                                                                       |" << endl<<endl;
 		cout << "12.Export File Tree                                                                                      |" << endl<<endl;
-		cout << "13.Import File Tree                                                                                              " << endl;
+		cout << "13.Import File Tree                                                                                      |" << endl << endl;
+		cout << "14.Copy Directory                                                                                          " << endl;
 		cout << "---------------------------------------------------------------------------------------------------------|" << endl<<endl;
 		cout << "Input: ";
 		int select;
@@ -106,7 +107,7 @@ int main()
 		case 9:// It is used to copy/move directory from one location to another
 		{
 			system("cls");
-			tree.copy_dir();
+			tree.move_dir();
 			continue;
 		}
 
@@ -143,6 +144,17 @@ int main()
 			temp = _getch();
 			continue;
 		}
+
+
+		case 14:
+		{
+			system("cls");
+			tree.copy_dir();
+
+			temp = _getch();
+			continue;
+		}
+
 
 		}
 	}

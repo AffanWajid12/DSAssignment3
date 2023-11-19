@@ -313,6 +313,7 @@ public:
 							cout << "Give a name to new file with extension: ";
 							string n;
 							cin >> n;
+							check_duplicate(n);
 							temp->right = new Node(n, true);
 							temp->right->set_path_auto(root);
 							return;
@@ -382,6 +383,7 @@ public:
 							cout << "Give a name to new file with extension: ";
 							string n;
 							cin >> n;
+							check_duplicate(n);
 							temp->right = new Node(n);
 							temp->right->set_path_auto(root);
 							return;
@@ -476,6 +478,7 @@ public:
 							cout << "Give a name to new directory: ";
 							string n;
 							cin >> n;
+							check_duplicate(n);
 							temp->left = new Node(n);
 							temp->left->set_path_auto(root);
 							return;
@@ -526,6 +529,7 @@ public:
 							cout << "Give a name to new directory: ";
 							string n;
 							cin >> n;
+							check_duplicate(n);
 							temp->left = new Node(n);
 							temp->left->set_path_auto(root);
 							return;
@@ -915,6 +919,7 @@ public:
 					cout << "Type the new name: ";
 					string new_name;
 					cin >> new_name;
+					check_duplicate(new_name);
 					temp->name = new_name;
 					temp->set_path_auto(root);
 					cout << "New name set successfully! " << endl;
@@ -1452,9 +1457,20 @@ public:
 		temp->right = clone_dir(start->right);
 		return temp;
 	}
+	Node* clone_dir_copy(Node* start)//Will be used for copying directory because they have to have a different name so (copied) is added to their name
+	{
+		if (start == NULL)
+		{
+			return NULL;
+		}
+		Node* temp = new Node(start);
+		temp->name = temp->name + "(copied)";
+		temp->left = clone_dir_copy(start->left);
+		temp->right = clone_dir_copy(start->right);
+		return temp;
+	}
 	
-	
-	void copy_dir()
+	void move_dir()
 	{
 		cout << "Copy|" << endl;
 		Node* to_copy = get_for_copy_dir();
@@ -1529,7 +1545,153 @@ public:
 				}
 			}
 	}
+	void copy_dir()
+	{
+		cout << "Copy|" << endl;
+		Node* to_copy = get_for_copy_dir_2();
+		if (to_copy == NULL)
+		{
+			return;
+		}
 
+		system("cls");
+		cout << "Paste| " << to_copy->name << endl;
+		//This is copied from the add dir func:
+
+		cout << "Do you want to insert the new directory in Patients Directory or Logs Directory?" << endl;
+		cout << "1.Patients" << endl;
+		cout << "2.Logs" << endl << endl;;
+
+		int select;
+		cin >> select;
+		Node* temp = root;
+		switch (select)
+		{
+		case 1:
+		{
+			temp = temp->left;
+			break;
+		}
+
+		case 2:
+		{
+			temp = temp->right;
+			break;
+		}
+		}
+
+		while (1)
+		{
+			cout << "Path: " << temp->path << endl;
+			if (temp->left == NULL)
+			{
+				cout << "This dir has space for new dir! Do you want to add the copied directory here? " << endl;
+				cout << "1.Yes			2.Cancel and return to menu" << endl;
+				int select2;
+				cin >> select2;
+				if (select2 == 1)
+				{
+
+					temp->left = clone_dir_copy(to_copy);
+					recal_all_path(temp->left);
+					//temp->left->set_path_auto(root);
+					return;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				cout << "This dir has a sub-dir already. Do you want to go into the sub-dir or cancel this action? " << endl;
+				cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
+				int select2;
+				cin >> select2;
+				if (select2 == 1)
+				{
+					temp = temp->left;
+					continue;
+				}
+				else
+				{
+					return;
+				}
+			}
+		}
+	}
+	//This func below is used for copying the dir 
+	Node* get_for_copy_dir_2()
+	{
+		cout << "Do you want to select the dir for copying in Patients Directory or Logs Directory?" << endl;
+		cout << "1.Patients" << endl;
+		cout << "2.Logs" << endl << endl;;
+
+		int select;
+		cin >> select;
+		Node* temp = root;
+		switch (select)
+		{
+
+		case 1:
+		{
+			temp = root->left;//Select patients
+			break;
+		}
+		case 2:
+		{
+			temp = root->right;//Select Logs
+			break;
+		}
+
+		}
+
+
+
+		while (1)
+		{
+			cout << "Path: " << temp->path << endl;
+			if (temp->left == NULL)//If sub directory doesnt exist exit
+			{
+				cout << "This dir doesnt have a sub-directory! Returning to menu... " << endl;
+				char c = _getch();
+				return NULL;
+			}
+			else
+			{//Ask the user to either goto sub-dir or copy the sub dir or cancel and return to menu
+				cout << "This directory has sub-directory " << temp->left->name << " .Select from the following actions : " << endl;
+				cout << "1.Goto sub-dir			2.Copy this sub-Dir	and Delete it		3.Cancel and return to menu" << endl;
+				int select2;
+				cin >> select2;
+				if (select2 == 1)
+				{
+					if (temp->left != NULL)
+					{
+						temp = temp->left;
+						continue;
+					}
+					else
+					{
+						cout << "It seems that this folder doesn't have a sub-directory!  ";
+						char c = _getch();
+						return NULL;
+					}
+				}
+				else if (select2 == 2)
+				{
+					Node* temp2 = clone_dir(temp->left);
+					
+					return temp2;
+				}
+				else
+				{
+					return NULL;
+				}
+			}
+		}
+
+	}
+	//fun get for copy dir is actually used for moving dir but first it deletes the dir
 	Node* get_for_copy_dir()
 	{
 		cout << "Do you want to select the dir for copying in Patients Directory or Logs Directory?" << endl;
@@ -1560,7 +1722,7 @@ public:
 		while (1)
 		{
 			cout << "Path: " << temp->path << endl;
-			if (temp == NULL)//If sub directory doesnt exist exit
+			if (temp->left == NULL)//If sub directory doesnt exist exit
 			{
 				cout << "This dir doesnt have a sub-directory! Returning to menu... " << endl;
 				char c = _getch();
@@ -1794,6 +1956,7 @@ public:
 		recal_all_path(root);
 	}
 	
+	//Recaculates all of the paths of the tree
 	void recal_all_path(Node*& root)
 	{
 		if (root == NULL)
@@ -1804,6 +1967,45 @@ public:
 		recal_all_path(root->left);
 		recal_all_path(root->right);
 		return;
+	}
+
+
+	//Used to check if the name isnt a duplicate of another file or dir.If so then exit the program.If detected stop the program
+	void check_duplicate(string name)
+	{
+		Queue q;
+		q.enqueue(root);
+		q.enqueue(NULL);
+		while (!(q.isEmpty()))
+		{
+			Node* temp = q.get_front();
+			q.dequeue();
+			if (temp == NULL)
+			{
+				
+				if (!(q.isEmpty()))
+				{
+					q.enqueue(NULL);
+				}
+			}
+			else
+			{
+				if (temp->name == name)
+				{
+					cout << endl << "A file or folder already exists with this name!!! Exiting program !.";
+					char temp = _getch();
+					exit(101);
+				}
+				if (temp->left)
+				{
+					q.enqueue(temp->left);
+				}
+				if (temp->right)
+				{
+					q.enqueue(temp->right);
+				}
+			}
+		}
 	}
 
 	};
