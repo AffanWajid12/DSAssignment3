@@ -918,6 +918,7 @@ public:
 					temp->name = new_name;
 					temp->set_path_auto(root);
 					cout << "New name set successfully! " << endl;
+					recal_all_path(root);//Recalculates all paths
 					return;
 				}
 				if (temp->left)

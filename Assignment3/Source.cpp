@@ -81,6 +81,7 @@ int main()
 		{
 			system("cls");
 			tree.rename_any();
+			
 			temp = _getch();
 			continue;
 		}
