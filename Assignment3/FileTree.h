@@ -1361,8 +1361,10 @@ public:
 			}
 		}
 		
-	}
-	Node* get_dir()
+	}//Used for copying /moving files
+
+
+	Node* get_dir()//Used for merging two dire
 	{
 
 		cout << "Do you want to select the directory for merging from Patients Directory or Logs Directory?" << endl;
@@ -1593,8 +1595,9 @@ public:
 		}
 
 	}
-	void merge_dirs()
+	void merge_dirs()//I assume that merging means that the content(File) of one directory is moved to another directory if it has space. Then the source file is deleted but the source dir will remain
 	{
+		//Ask user for source:
 		cout << "Merge|" << endl;
 		Node* to_copy = get_dir();
 		if (to_copy == NULL)
@@ -1603,160 +1606,102 @@ public:
 		}
 
 		system("cls");
-		cout << "Merge| " << to_copy->name << endl;
+		cout << "Merge| Source: " << to_copy->name << endl;
 
+		//Now ask user for Destination File and merge the directories
 		while (1)
 		{
-			cout << "Do you want to insert the new file in Patients Directory or Logs Directory?" << endl;
+			cout << "Do you want to merge in Patients Directory or Logs Directory?" << endl;
 			cout << "1.Patients" << endl;
 			cout << "2.Logs" << endl << endl;;
 
 			int select;
 			cin >> select;
-			Node* temp = NULL;
+			Node* temp = root;
 			switch (select)
 			{
 			case 1:
-			{
 				temp = root->left;//Select patients
-				while (1)
-				{
-					cout << "Path: " << temp->path << endl;
-					if (temp->right == NULL)
-					{
-						cout << "This dir has space for new file! Do you want to add the copy of file here? " << endl;
-						cout << "1.Yes		2.Goto Sub-Directory of Current Directory			3.Cancel and return to menu" << endl;
-						int select2;
-						cin >> select2;
-						if (select2 == 1)
-						{
-							temp->right = new Node(to_copy);
-							temp->right->set_path_auto(root);
-
-							return;
-						}
-						else if (select2 == 2)
-						{
-							if (temp->left != NULL)
-							{
-								temp = temp->left;
-								continue;
-							}
-							else
-							{
-								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
-								char c = _getch();
-								return;
-							}
-						}
-						else
-						{
-							return;
-						}
-					}
-					else
-					{
-						cout << "This dir has a file already. Do you want to go into the sub-dir or cancel this action? " << endl;
-						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
-						int select2;
-						cin >> select2;
-						if (select2 == 1)
-						{
-							if (temp->left != NULL)
-							{
-								temp = temp->left;
-								continue;
-							}
-							else
-							{
-								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
-								char c = _getch();
-								return;
-							}
-						}
-						else
-						{
-							return;
-						}
-					}
-				}
-				return;
-			}
-
+				break;
+			
 			case 2:
+				temp = root->right;//Select logs
+				break;
+			}
+			
+			while (1)
 			{
-				temp = root->right;//Select Logs
-				while (1)
+				cout << "Path: " << temp->path << endl;
+				if (temp->right == NULL)
 				{
-					cout << "Path: " << temp->path << endl;
-					if (temp->right == NULL)
+					cout << "This dir has space for merging! Do you want to merge the dir with the current dir here? " << endl;
+					cout << "1.Yes		2.Goto Sub-Directory of Current Directory			3.Cancel and return to menu" << endl;
+					int select2;
+					cin >> select2;
+					if (select2 == 1)
 					{
-						cout << "This dir has space for new file! Do you want to add the copy of file here? " << endl;
-						cout << "1.Yes		2.Goto Sub-Directory of Current Directory			3.Cancel and return to menu" << endl;
-						int select2;
-						cin >> select2;
-						if (select2 == 1)
+						temp->right = clone_dir(to_copy)->right;
+						to_copy->right = NULL;
+						temp->right->set_path_auto(root);
+
+						return;
+					}
+					else if (select2 == 2)
+					{
+						if (temp->left != NULL)
 						{
-							temp->right = new Node(to_copy);
-
-							temp->right->set_path_auto(root);
-
-
-							return;
-						}
-						else if (select2 == 2)
-						{
-							if (temp->left != NULL)
-							{
-								temp = temp->left;
-								continue;
-							}
-							else
-							{
-								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
-								char c = _getch();
-								return;
-							}
+							temp = temp->left;
+							continue;
 						}
 						else
 						{
+							cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+							char c = _getch();
 							return;
 						}
 					}
 					else
 					{
-						cout << "This dir has a file already. Do you want to go into the sub-dir or cancel this action? " << endl;
-						cout << "1.Goto sub-dir			2.Cancel and return to menu" << endl;
-						int select2;
-						cin >> select2;
-						if (select2 == 1)
+						return;
+					}
+				}
+				else
+				{
+					cout << "This dir has a file already named "<<temp->right->name<<" Do you want to go into the sub - dir, replace the current file or cancel this action ? " << endl;
+					cout << "1.Goto sub-dir				2.Replace current file 				3.Cancel and return to menu" << endl;
+					int select2;
+					cin >> select2;
+					if (select2 == 1)
+					{
+						if (temp->left != NULL)
 						{
-							if (temp->left != NULL)
-							{
-								temp = temp->left;
-								continue;
-							}
-							else
-							{
-								cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
-								char c = _getch();
-								return;
-							}
+							temp = temp->left;
+							continue;
+						}
+						else if (select2 == 2)
+						{
+							temp->right = clone_dir(to_copy)->right;
+							to_copy->right = NULL;
+							temp->right->set_path_auto(root);
+							return;
 						}
 						else
 						{
+							cout << "It seems that this folder doesn't have a sub-directory! Going back to menu. Press a button to continue ";
+							char c = _getch();
 							return;
 						}
 					}
+					else
+					{
+						return;
+					}
 				}
-				return;
 			}
-			default:
-				cout << "Wrong option! ";
+			return;
 
-				continue;
-			}
 		}
+			
 	}
 	void search(string name)//Function is used to search for the path of a file/Directory by given name by using level order traversal
 		{
